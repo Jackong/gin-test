@@ -31,3 +31,15 @@ func (mocker *Mocker) Mock(req *http.Request, body interface{}) (res *httptest.R
 	}
 	return
 }
+
+//Middlewares to mock for gin
+func Middlewares(middlewares ...gin.HandlerFunc) *Mocker {
+	r := gin.Default()
+	group := r.Group("/")
+	group.Use(middlewares...)
+	{
+		group.Any("/*any", func(c *gin.Context) {})
+	}
+
+	return New(r)
+}
